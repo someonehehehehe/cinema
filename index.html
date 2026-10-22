@@ -1,3 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Little Cinema ♡</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Limelight&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+
+<style>
+:root{
+  --gold:#e6b65c; --gold-soft:#f4d9a0; --cream:#fff0d5;
+  --velvet:#8e1622; --ink:#0d0504;
+  --open:.23;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--ink);color:var(--cream);overflow-x:hidden;
+  font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;
+}
+section[id]{scroll-margin-top:60px}
+
+/* ================= NAV ================= */
+nav{
+  position:fixed;z-index:20;top:0;left:0;width:100%;
+  padding:14px 4%;display:flex;justify-content:space-between;
+  align-items:center;gap:12px;flex-wrap:wrap;
+  background:linear-gradient(#0d0504f5,#0d0504d9);
+  border-bottom:1px solid #6b4422;
+  box-shadow:0 2px 0 #2a120a,0 6px 20px #0008;
+}
+.logo{font-family:Limelight,Georgia,serif;color:var(--gold-soft);font-size:20px;text-shadow:0 0 10px #e6b65c66}
+.navlinks{display:flex;gap:22px;flex-wrap:wrap}
+nav a{color:#f0d8bd;text-decoration:none;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;transition:.3s}
+nav a:hover{color:var(--gold);text-shadow:0 0 8px #e6b65c99}
+
+/* ================= SHARED ================= */
+.velvet-bg{
+  background:
+    radial-gradient(ellipse at 50% 40%,#b4282845,transparent 60%),
+    repeating-linear-gradient(90deg,#1c0807 0 70px,#240a09 70px 140px),
+    #140605;
+}
+.marquee{
+  position:relative;z-index:4;text-align:center;padding:20px 46px;margin-bottom:22px;
+  border:3px solid var(--gold);border-radius:10px;
+  background:linear-gradient(#2a0c0a,#170605);
+  box-shadow:0 0 35px #e6b65c40,inset 0 0 25px #0009;
+}
+.marquee::before,.marquee::after{
+  content:"";position:absolute;left:12px;right:12px;height:12px;
+  background:
+    radial-gradient(circle,#fff7d1 0 3px,#ffc34d 4px,transparent 6px) 0 50%/44px 12px repeat-x,
+    radial-gradient(circle,#6d4f24 0 3px,transparent 4px) 22px 50%/44px 12px repeat-x;
+  animation:chase 1s steps(2) infinite;
+}
+.marquee::before{top:-7px} .marquee::after{bottom:-7px}
+@keyframes chase{
+  from{background-position:0 50%,22px 50%}
+  to{background-position:44px 50%,66px 50%}
+}
+.marquee small{display:block;letter-spacing:6px;font-size:12px;color:var(--gold)}
+.marquee h1{
+  font-family:Limelight,Georgia,serif;font-weight:400;
+  font-size:clamp(26px,5vw,54px);margin:4px 0;color:#ffe9b8;
+  text-shadow:0 0 12px #ffbe5acc,0 0 32px #ff8c3c80;
+}
+.marquee .credits{font-size:15px;letter-spacing:2px;color:#e8c99a;font-style:italic}
+
+.shimmer{
+  background:linear-gradient(90deg,#f4d9a0,#fff8e4,#e6b65c,#f4d9a0);
+  background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent !important;
+  text-shadow:none !important;filter:drop-shadow(0 0 14px #ffbe5a99);
+  animation:shine 4s linear infinite;
+}
+@keyframes shine{to{background-position:-200% 0}}
+
+.dust{
+  position:absolute;z-index:1;width:3px;height:3px;border-radius:50%;
+  background:#ffd98a;box-shadow:0 0 6px 1px #ffd98a;opacity:0;pointer-events:none;
+  animation:drift linear infinite;
+}
+@keyframes drift{
+  0%{opacity:0;transform:translate(0,0)}
+  20%{opacity:.85}
+  100%{opacity:0;transform:translate(40px,-160px)}
+}
+
+.play{
+  position:relative;z-index:1;display:inline-block;text-decoration:none;
+  background:linear-gradient(#7a2430,#561620);color:#ffe7c1;
+  border:1px solid var(--gold);padding:12px 28px;border-radius:3px;
+  font-family:Limelight,Georgia,serif;font-size:clamp(11px,1.3vw,16px);
+  letter-spacing:2px;cursor:pointer;transition:.3s;
+  box-shadow:0 0 18px #e6b65c33;
+}
+.play:hover{background:linear-gradient(#a63442,#7a2430);transform:scale(1.05);box-shadow:0 0 28px #e6b65c88}
+
+.filmstrip{
+  height:40px;border-block:1px solid #3a2015;
+  background:
+    linear-gradient(90deg,#f1e2c680 0 14px,transparent 14px) 0 7px/30px 8px repeat-x,
+    linear-gradient(90deg,#f1e2c680 0 14px,transparent 14px) 0 25px/30px 8px repeat-x,
+    #080303;
+  animation:roll 2.5s linear infinite;
+}
+@keyframes roll{to{background-position:30px 7px,30px 25px,0 0}}
+
+/* Scroll reveal (only hides things if JavaScript is running) */
+html.js .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s ease,transform .9s ease}
+html.js .reveal.in{opacity:1;transform:none}
+
+/* ================= 1. WELCOME ================= */
+.opening{
+  position:relative;overflow:hidden;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:110px 6% 60px;
+}
+.spot{
+  position:absolute;bottom:-5%;width:34vw;min-width:240px;height:130vh;z-index:0;
+  background:linear-gradient(to top,#ffe6b045,#ffe6b010 60%,transparent 85%);
+  clip-path:polygon(44% 100%,56% 100%,100% 0,0 0);
+  transform-origin:50% 100%;pointer-events:none;
+}
+.spot.l{left:2%;animation:spotL 7s ease-in-out infinite alternate}
+.spot.r{right:2%;animation:spotR 8s ease-in-out infinite alternate}
+@keyframes spotL{from{transform:rotate(-28deg)}to{transform:rotate(18deg)}}
+@keyframes spotR{from{transform:rotate(28deg)}to{transform:rotate(-18deg)}}
+.opening .lead{
+  position:relative;z-index:2;max-width:560px;color:#e3c7a2;font-style:italic;
+  font-size:21px;line-height:1.8;margin:26px auto 30px;
+}
+.scroll-hint{
+  position:relative;z-index:2;display:inline-block;color:var(--gold);text-decoration:none;
+  letter-spacing:3px;font-size:14px;animation:bob 2s ease-in-out infinite;
+}
+@keyframes bob{50%{transform:translateY(8px)}}
+
+/* ================= SECTIONS ================= */
+.below{
+  padding:75px 6%;text-align:center;
+  background:radial-gradient(ellipse at top,#2a110c,var(--ink) 70%);
+}
+h2{
+  font-family:Limelight,Georgia,serif;font-weight:400;color:#f1cb91;
+  font-size:clamp(26px,4vw,40px);margin:0 0 10px;text-shadow:0 0 16px #e6b65c66;
+}
+.subtitle{color:#d2b69a;line-height:1.8;max-width:600px;margin:12px auto 38px;font-style:italic;font-size:20px}
+.cards{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:22px;max-width:1100px;margin:auto;
+}
+.card{
+  position:relative;border:1px solid #5a3420;padding:44px 22px 42px;
+  background:
+    linear-gradient(115deg,transparent 40%,#ffe7b81c 50%,transparent 60%) -150% 0/250% 100% no-repeat,
+    linear-gradient(#22100b,#150806);
+  transition:transform .35s,border-color .35s,box-shadow .35s,background-position .9s;
+}
+.card::before,.card::after{
+  content:"";position:absolute;left:10px;right:10px;height:9px;
+  background:linear-gradient(90deg,#e6b65c55 0 10px,transparent 10px) 0 0/20px 9px repeat-x;
+}
+.card::before{top:12px} .card::after{bottom:12px}
+.card:hover{
+  transform:translateY(-8px);border-color:var(--gold);
+  box-shadow:0 12px 34px #e6b65c2e,0 0 0 1px #e6b65c55;
+  background-position:150% 0,0 0;
+}
+.card .emoji{font-size:36px;display:inline-block;transition:transform .4s}
+.card:hover .emoji{transform:scale(1.2) rotate(-6deg)}
+.card h3{color:#f1cb91;font-size:24px;margin:12px 0 6px;font-weight:600}
+.card p{color:#d6bca3;line-height:1.7;font-size:17px;margin:0}
+
+/* Ticket */
+.ticket-wrap{max-width:540px;margin:55px auto 10px;filter:drop-shadow(0 14px 25px #000a)}
+.ticket{
+  display:flex;color:#4b2519;text-align:left;
+  background:linear-gradient(135deg,#f7e2b8,#e8c68a);
+  -webkit-mask:radial-gradient(circle at 0 50%,#0000 16px,#000 17px) left/51% 100% no-repeat,
+               radial-gradient(circle at 100% 50%,#0000 16px,#000 17px) right/51% 100% no-repeat;
+          mask:radial-gradient(circle at 0 50%,#0000 16px,#000 17px) left/51% 100% no-repeat,
+               radial-gradient(circle at 100% 50%,#0000 16px,#000 17px) right/51% 100% no-repeat;
+}
+.ticket-main{flex:1;padding:26px 22px 26px 36px}
+.ticket-main .admit{letter-spacing:4px;font-size:13px;color:#8a4b2a}
+.ticket h2{color:#67251c;text-shadow:none;font-size:clamp(22px,4vw,30px);margin:6px 0 12px}
+.ticket-main p{margin:4px 0;font-size:17px}
+.ticket-main .play{margin-top:16px}
+.ticket-stub{
+  width:110px;border-left:2px dashed #9b6a3d;padding:18px 10px 18px 6px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  font-family:Limelight,Georgia,serif;color:#67251c;
+}
+.ticket-stub .vert{writing-mode:vertical-rl;letter-spacing:4px;font-size:15px}
+
+.letter{
+  display:none;max-width:540px;margin:24px auto 0;padding:30px 30px 24px;text-align:left;
+  background:linear-gradient(#fff8ea,#f3e3c4);color:#4b2519;border-radius:3px;
+  box-shadow:0 14px 30px #000a;font-size:20px;line-height:1.8;font-style:italic;
+}
+.letter.show{display:block;animation:fadeUp .8s ease}
+.letter .sign{font-family:'Great Vibes',cursive;font-style:normal;font-size:32px;text-align:right;color:#7a2430;margin-top:8px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}}
+.take-seat{margin-top:40px}
+
+.heart{position:fixed;z-index:30;pointer-events:none;color:#e0566a;animation:floatUp 2.6s ease-out forwards}
+@keyframes floatUp{to{transform:translateY(-70vh) rotate(25deg);opacity:0}}
+.trail{position:fixed;z-index:30;pointer-events:none;color:#e6b65c;font-size:12px;
+  animation:trailFade 1s ease-out forwards}
+@keyframes trailFade{to{transform:translateY(-24px) scale(.4);opacity:0}}
+
+/* ================= 5. THE THEATRE ================= */
+.theatre{
+  position:relative;min-height:100vh;padding:95px 3% 0;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;
+}
+.dim{position:absolute;inset:0;z-index:5;background:#000;opacity:0;pointer-events:none;transition:opacity 1.6s}
+body.playing .dim{opacity:.75}
+
+.sconce{
+  position:absolute;top:40%;z-index:1;width:16px;height:46px;
+  border-radius:8px 8px 3px 3px;background:linear-gradient(#ffe7a8,#d99a3c);
+  box-shadow:0 0 40px 18px #ffbe5a55,0 0 140px 60px #ffa03c22;
+}
+.sconce::after{content:"";position:absolute;left:-10px;right:-10px;bottom:-10px;height:12px;
+  background:linear-gradient(#c79540,#6d4a1a);border-radius:2px}
+.sconce.l{left:2.5%} .sconce.r{right:2.5%}
+
+.stage{position:relative;width:min(1100px,100%);padding-top:74px}
+.valance{
+  position:absolute;z-index:3;top:0;left:0;right:0;height:64px;
+  background:
+    repeating-linear-gradient(90deg,#0000 0 30px,#0003 30px 40px),
+    linear-gradient(#3d050b,#a11c2a 65%,#701019);
+  border-bottom:4px solid var(--gold);box-shadow:0 8px 20px #000a;
+}
+.valance::after{
+  content:"";position:absolute;left:0;right:0;bottom:-26px;height:24px;
+  background:radial-gradient(circle at 50% 0,#701019 0 18px,var(--gold) 19px 21px,transparent 22px) 0 0/42px 24px repeat-x;
+}
+.curtain{
+  position:absolute;z-index:2;top:0;bottom:34px;width:51%;
+  background:
+    linear-gradient(#0007,#0000 25%,#0000 70%,#0009),
+    repeating-linear-gradient(90deg,#4a070e 0,#9c1a27 2.4%,#c42c39 3.8%,#8e1622 6%,#4a070e 8%);
+  transition:transform 2.6s cubic-bezier(.65,.05,.3,1);
+}
+.curtain::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:14px;
+  background:repeating-linear-gradient(90deg,var(--gold) 0 3px,#8a6526 3px 6px);
+}
+.curtain.left{left:0;transform-origin:left;box-shadow:12px 0 25px #000a}
+.curtain.right{right:0;transform-origin:right;box-shadow:-12px 0 25px #000a}
+.stage.open .curtain{transform:scaleX(var(--open))}
+body.playing .stage.open .curtain{transform:scaleX(calc(var(--open) * .75))}
+
+.beam{
+  position:absolute;z-index:6;left:12%;right:12%;top:74px;height:calc(100% + 300px);
+  clip-path:polygon(0 0,100% 0,53% 100%,47% 100%);
+  background:linear-gradient(to top,#ffecbe40,#ffecbe08 70%);
+  opacity:0;transition:opacity 1.4s;pointer-events:none;
+}
+body.playing .beam{opacity:1}
+
+.screen-frame{
+  position:relative;z-index:6;width:76%;margin:0 auto;padding:10px;border-radius:4px;
+  background:linear-gradient(135deg,#8a6526,#f3d38a 30%,#9b722c 55%,#e8c070 80%,#7a5520);
+  box-shadow:0 0 60px #ffc87840,0 20px 40px #000b;
+}
+.screen{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}
+.screen-content{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;padding:15px;color:#f8dfb9;
+  background:radial-gradient(ellipse,#5b2219,#160906 80%);
+}
+.screen-content::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,#ffffff06 0 1px,transparent 1px 3px);
+  animation:flicker 3s infinite;
+}
+@keyframes flicker{0%,100%{opacity:.6}45%{opacity:1}50%{opacity:.4}55%{opacity:.9}}
+.screen-content .tag{letter-spacing:3px;font-size:clamp(8px,1.1vw,13px);color:var(--gold)}
+.screen-content h1{
+  font-family:Limelight,Georgia,serif;font-weight:400;
+  font-size:clamp(16px,3.6vw,44px);margin:10px 0;color:#f6d5a2;text-shadow:0 0 18px #ffb46466;
+}
+.screen-content p{font-size:clamp(10px,1.6vw,18px);line-height:1.6;max-width:90%;margin:6px 0}
+#intro.hidden{display:none}
+
+#movie{display:none;width:100%;height:100%;object-fit:contain;background:#000}
+#movie.show{display:block}
+.screen-close{
+  display:none;position:absolute;top:8px;right:8px;z-index:3;
+  padding:7px 12px;background:#190b09d9;color:#fff0d5;
+  border:1px solid #b88752;cursor:pointer;font-family:inherit;font-size:14px;
+}
+.screen-close.show{display:block}
+
+.leader{
+  position:absolute;inset:0;z-index:2;display:none;align-items:center;justify-content:center;
+  background:radial-gradient(#d8cfc0,#857b6c);color:#141414;
+}
+.leader.show{display:flex}
+.leader::before,.leader::after{content:"";position:absolute;background:#222}
+.leader::before{left:0;right:0;top:50%;height:2px}
+.leader::after{top:0;bottom:0;left:50%;width:2px}
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+.ring{
+  position:absolute;height:75%;aspect-ratio:1;border-radius:50%;
+  border:3px solid #222;outline:2px solid #2228;outline-offset:8px;
+  background:conic-gradient(#0000004d var(--a),transparent 0);
+  animation:sweep 1s linear infinite;
+}
+@keyframes sweep{to{--a:360deg}}
+#count{position:relative;z-index:1;font-family:Limelight,Georgia,serif;font-size:clamp(40px,11vw,130px)}
+
+.stage-floor{
+  position:relative;z-index:3;height:34px;margin-top:26px;
+  background:linear-gradient(#5a2e17,#2b1209);
+  border-top:3px solid var(--gold);box-shadow:0 14px 30px #000c;
+}
+
+.seats{position:relative;z-index:4;width:100%;margin-top:34px}
+.row{display:flex;justify-content:center;gap:clamp(3px,.6vw,8px);margin-top:8px}
+.seat{
+  position:relative;aspect-ratio:1/1.05;border-radius:40% 40% 12% 12%;
+  background:linear-gradient(#7a1520,#3a070c);
+  box-shadow:inset 0 3px 6px #ff787840,0 5px 8px #000c;
+}
+.r1 .seat{width:clamp(14px,3vw,36px);filter:brightness(.55)}
+.r2 .seat{width:clamp(17px,3.6vw,44px);filter:brightness(.75)}
+.r3 .seat{width:clamp(20px,4.3vw,54px)}
+.seat.ours{background:linear-gradient(#b02434,#560b14);box-shadow:0 0 18px #e6b65c66,inset 0 3px 6px #ff9a9a55}
+.seat.ours::after{
+  content:"♥";position:absolute;inset:0;display:grid;place-items:center;
+  color:var(--gold);font-size:clamp(9px,1.8vw,22px);text-shadow:0 0 8px #e6b65c;
+  animation:pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{50%{transform:scale(1.25)}}
+.reserved{position:relative;z-index:4;font-style:italic;color:#d9b88a;letter-spacing:1px;margin:18px 0 26px;font-size:16px}
+
+/* ================= FOOTER ================= */
+footer{
+  text-align:center;padding:60px 15px 40px;color:#c5a488;line-height:1.8;
+  background:#080302;border-top:1px solid #55321e;
+}
+footer .end{font-family:Limelight,Georgia,serif;font-size:clamp(30px,6vw,56px);color:var(--gold-soft);text-shadow:0 0 18px #e6b65c66;margin:0}
+footer .end-sub{font-style:italic;margin:0 0 30px;font-size:19px}
+.credit{display:flex;justify-content:center;gap:14px;font-size:17px}
+.credit span:first-child{text-align:right;width:180px;color:#9c8068;letter-spacing:1px}
+.credit span:last-child{text-align:left;width:180px;color:var(--cream)}
+footer .sign-off{margin-top:30px}
+
+/* ================= MOBILE ================= */
+@media(max-width:700px){
+  :root{--open:.13}
+  nav{position:absolute;justify-content:center}
+  .navlinks{justify-content:center;gap:12px}
+  nav a{font-size:11px}
+  .logo{width:100%;text-align:center}
+  .opening{padding-top:130px}
+  .theatre{min-height:0;padding-top:50px}
+  .sconce{display:none}
+  .marquee{padding:16px 22px}
+  .stage{padding-top:46px}
+  .valance{height:38px}
+  .beam{top:46px;left:7%;right:7%}
+  .curtain{bottom:24px}
+  .stage-floor{height:24px;margin-top:18px}
+  .screen-frame{width:86%;padding:6px}
+  .screen-content{padding:4px}
+  .screen-content p br{display:none}
+  .screen-content .popcorn{display:none}
+  .screen-content .play{padding:6px 12px}
+  .below{padding:55px 5%}
+  .ticket-main{padding:22px 14px 22px 28px}
+  .ticket-stub{width:76px}
+  .credit span:first-child,.credit span:last-child{width:140px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+
 <body>
 
 <nav>
@@ -12,10 +402,12 @@
 </nav>
 
 <!-- 1. WELCOME -->
-<section class="opening" id="home">
+<section class="opening velvet-bg" id="home">
+  <div class="spot l"></div>
+  <div class="spot r"></div>
   <div class="marquee">
     <small>✦ WELCOME TO ✦</small>
-    <h1>Our Little Cinema</h1>
+    <h1 class="shimmer">Our Little Cinema</h1>
     <div class="credits">Doors are open · Showtime is at the end ♡</div>
   </div>
   <p class="lead">
@@ -29,23 +421,23 @@
 
 <!-- 2. TONIGHT'S SHOW -->
 <section class="below" id="movie-section">
-  <h2>🍿 Tonight's Programme</h2>
-  <p class="subtitle">
+  <h2 class="reveal">🍿 Tonight's Programme</h2>
+  <p class="subtitle reveal">
     One special person. One little cinema. A love story that means
     more to me than any movie ever could.
   </p>
   <div class="cards">
-    <div class="card">
+    <div class="card reveal">
       <div class="emoji">🎬</div>
       <h3>Our Movie</h3>
       <p>A little film made especially for you, starring my favourite human.</p>
     </div>
-    <div class="card">
+    <div class="card reveal">
       <div class="emoji">🍿</div>
       <h3>Our Favourite Scenes</h3>
       <p>All the little memories, conversations and moments I treasure.</p>
     </div>
-    <div class="card">
+    <div class="card reveal">
       <div class="emoji">❤️</div>
       <h3>Our Happy Ending</h3>
       <p>Except this isn't the end. I want a thousand more chapters with you.</p>
@@ -57,23 +449,23 @@
 
 <!-- 3. MEMORIES -->
 <section class="below" id="moments">
-  <h2>🎞️ Our Memory Reel</h2>
-  <p class="subtitle">
+  <h2 class="reveal">🎞️ Our Memory Reel</h2>
+  <p class="subtitle reveal">
     Every movie has scenes you never want to forget.
     These are the memories I'd replay forever.
   </p>
   <div class="cards">
-    <div class="card">
+    <div class="card reveal">
       <div class="emoji">🌙</div>
       <h3>Our Late Nights</h3>
       <p>Talking about everything and nothing, and never wanting to hang up.</p>
     </div>
-    <div class="card">
+    <div class="card reveal">
       <div class="emoji">💌</div>
       <h3>Our Little Things</h3>
       <p>The smallest moments with you somehow become my biggest memories.</p>
     </div>
-    <div class="card">
+    <div class="card reveal">
       <div class="emoji">✨</div>
       <h3>Our Future</h3>
       <p>All the places to go, movies to watch and memories yet to make.</p>
@@ -85,29 +477,29 @@
 
 <!-- 4. LOVE NOTES + TICKET -->
 <section class="below" id="love">
-  <h2>♡ Why You're So Loved</h2>
-  <p class="subtitle">
+  <h2 class="reveal">♡ Why You're So Loved</h2>
+  <p class="subtitle reveal">
     If you ever forget how special you are, let this be your little reminder.
   </p>
   <div class="cards">
-    <div class="card">
+    <div class="card reveal">
       <div class="emoji">⭐</div>
       <h3>You're My Favourite</h3>
       <p>Out of everyone in this world, you're the person my heart chooses.</p>
     </div>
-    <div class="card">
+    <div class="card reveal">
       <div class="emoji">🎥</div>
       <h3>You Make Life Better</h3>
       <p>You make even the most ordinary days feel like my favourite film.</p>
     </div>
-    <div class="card">
+    <div class="card reveal">
       <div class="emoji">❤️</div>
       <h3>I'm Always Cheering</h3>
       <p>For your dreams, your happiness and every little thing you want to do.</p>
     </div>
   </div>
 
-  <div class="ticket-wrap">
+  <div class="ticket-wrap reveal">
     <div class="ticket">
       <div class="ticket-main">
         <div class="admit">✦ ADMIT ONE ✦</div>
@@ -132,13 +524,13 @@
     <div class="sign">Yours, always</div>
   </div>
 
-  <a href="#cinema" class="play take-seat">🎟️ TAKE YOUR SEAT — THE SHOW IS ABOUT TO BEGIN</a>
+  <a href="#cinema" class="play take-seat reveal">🎟️ TAKE YOUR SEAT — THE SHOW IS ABOUT TO BEGIN</a>
 </section>
 
 <div class="filmstrip"></div>
 
 <!-- 5. THE CINEMA (grand finale) -->
-<section class="theatre" id="cinema">
+<section class="theatre velvet-bg" id="cinema">
   <div class="sconce l"></div>
   <div class="sconce r"></div>
 
@@ -206,16 +598,45 @@
 </footer>
 
 <script>
-const video   = document.getElementById("movie");
-const intro   = document.getElementById("intro");
-const closeBtn= document.getElementById("closeMovie");
-const leader  = document.getElementById("leader");
-const countEl = document.getElementById("count");
-const stage   = document.getElementById("stage");
-let countdown = null;
+const video    = document.getElementById("movie");
+const intro    = document.getElementById("intro");
+const closeBtn = document.getElementById("closeMovie");
+const leader   = document.getElementById("leader");
+const countEl  = document.getElementById("count");
+const stage    = document.getElementById("stage");
+let countdown  = null;
 
-// Open the curtains only when she reaches the theatre
-const curtainWatcher = new IntersectionObserver((entries) => {
+/* Floating golden dust in the welcome hall and the theatre */
+document.querySelectorAll(".opening, .theatre").forEach(hall => {
+  for (let i = 0; i < 35; i++) {
+    const d = document.createElement("span");
+    d.className = "dust";
+    d.style.left = Math.random() * 100 + "%";
+    d.style.top = (20 + Math.random() * 80) + "%";
+    d.style.animationDuration = (6 + Math.random() * 8) + "s";
+    d.style.animationDelay = (Math.random() * 8) + "s";
+    hall.appendChild(d);
+  }
+});
+
+/* Fade things in as she scrolls */
+const revealer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add("in");
+      revealer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll(".reveal").forEach(el => {
+  const siblings = el.parentElement.querySelectorAll(":scope > .card.reveal");
+  const idx = Array.prototype.indexOf.call(siblings, el);
+  if (idx > -1) el.style.transitionDelay = (idx * 0.18) + "s";
+  revealer.observe(el);
+});
+
+/* Open the curtains only when she reaches the theatre */
+const curtainWatcher = new IntersectionObserver(entries => {
   if (entries[0].isIntersecting) {
     setTimeout(() => stage.classList.add("open"), 400);
     curtainWatcher.disconnect();
@@ -223,7 +644,7 @@ const curtainWatcher = new IntersectionObserver((entries) => {
 }, { threshold: 0.35 });
 curtainWatcher.observe(stage);
 
-// Build the rows of seats (front row middle two are "ours")
+/* Rows of seats (front row middle two are "ours") */
 const seatsEl = document.getElementById("seats");
 [{n:12,c:"r1"},{n:13,c:"r2"},{n:14,c:"r3"}].forEach((r, i) => {
   const row = document.createElement("div");
@@ -239,6 +660,23 @@ const seatsEl = document.getElementById("seats");
   }
   seatsEl.appendChild(row);
 });
+
+/* Little heart trail following the mouse (computers only) */
+if (window.matchMedia("(pointer:fine)").matches) {
+  let last = 0;
+  document.addEventListener("mousemove", e => {
+    const now = Date.now();
+    if (now - last < 90 || document.body.classList.contains("playing")) return;
+    last = now;
+    const t = document.createElement("span");
+    t.className = "trail";
+    t.textContent = "♥";
+    t.style.left = (e.clientX + 6) + "px";
+    t.style.top = (e.clientY + 6) + "px";
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 1000);
+  });
+}
 
 function startMovie() {
   if (countdown) return;
@@ -303,3 +741,4 @@ function burstHearts() {
 </script>
 
 </body>
+</html>
